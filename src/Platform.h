@@ -1,14 +1,11 @@
-//
-// Created by pigges on 2024-04-17.
-//
+#pragma once
 
-#ifndef HEALVEN_PLATFORM_H
-#define HEALVEN_PLATFORM_H
+#include "SpriteEntity.h"
+#include <SFML/Graphics.hpp>
 
+class Platform : public SpriteEntity {
+public:
+    Platform(sf::Vector2i position);
 
-class Platform {
-
+    void update(float delta);
 };
-
-
-#endif //HEALVEN_PLATFORM_H

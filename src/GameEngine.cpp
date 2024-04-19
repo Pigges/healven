@@ -1,9 +1,11 @@
 #include "GameEngine.h"
 #include "Player.h"
+#include "Platform.h"
+#include <SFML/Graphics.hpp>
 
 GameEngine::GameEngine() :
-        window(sf::VideoMode(1280, 720), "Healven"), eventListener(&window) {
-
+        window(sf::VideoMode(480, 854), "Healven"), eventListener(&window) {
+    window.setSize(sf::Vector2u(480, 854));
 }
 
 GameEngine::~GameEngine() = default;
@@ -17,6 +19,11 @@ void GameEngine::renderLoop() {
     window.setView(view);
 
     entityManager->add(new Player());
+    entityManager->add(new Platform(sf::Vector2i(100, 700)));
+    entityManager->add(new Platform(sf::Vector2i(350, 550)));
+
+    //entityManager->add(new Platform(sf::Vector2i(100, 400)));
+    entityManager->add(new Platform(sf::Vector2i(100, 300)));
 
     sf::Clock deltaClock;
 
@@ -26,7 +33,7 @@ void GameEngine::renderLoop() {
 
         window.setView(window.getDefaultView());
 
-        window.clear();
+        window.clear(sf::Color::Red);
 
         entityManager->update(deltaClock.restart().asSeconds());
 

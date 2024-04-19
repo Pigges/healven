@@ -11,7 +11,8 @@ public:
         // Load a sprite to display
         texture.loadFromFile(file); // TODO: Handle error case
         sprite.setTexture(texture);
-        sprite.setScale(10, 10);
+        sprite.setScale(5, 5);
+        sprite.setOrigin(8, 8);
     }
 
     virtual void update(float delta) {

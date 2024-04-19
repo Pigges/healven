@@ -24,7 +24,11 @@ add_executable(healven src/main.cpp
         src/GameEngine.cpp
         src/GameEngine.h
         src/Player.cpp
-        src/Player.h)
+        src/Player.h
+        src/Animation.cpp
+        src/Animation.h
+        src/Platform.cpp
+        src/Platform.h)
 target_link_libraries(healven PRIVATE sfml-graphics)
 target_compile_features(healven PRIVATE cxx_std_17)
 
