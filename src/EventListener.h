@@ -3,7 +3,6 @@
 #include <string>
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "RenderManager.h"
 
 class EventListener {
 private:

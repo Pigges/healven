@@ -4,6 +4,7 @@
 #include "SpriteEntity.h"
 #include "Animation.h"
 #include "EntityManager.h"
+#include "RenderManager.h"
 #include <vector>
 
 #define PLAYER_SPRITE "resources/sprites/player.png"
@@ -15,7 +16,6 @@
 enum class PlayerState {
     IDLE,
     WALKING,
-    RUNNING,
     JUMPING,
     FALLING,
     GLIDING,
@@ -37,6 +37,7 @@ private:
     sf::Vector2f velocity;
     std::unordered_map<PlayerState, Animation*> animations;
     EntityManager* entityManager = EntityManager::getInstance(); // Grab the entity manager
+    RenderManager* renderManager = RenderManager::getInstance();
 
     void applyGravity(float delta);
     std::vector<Entity*> getCollisions();

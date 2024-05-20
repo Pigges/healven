@@ -4,9 +4,10 @@
 #include <vector>
 
 Player::Player() : SpriteEntity(PLAYER_SPRITE) {
-    //sprite.setTextureRect(playerSprite[this->state]);
-    sprite.setPosition(100, 600);
+    sprite.setPosition(100, -100);
+    sprite.setOrigin(8, 8);
 
+    // A bunch of animation definitions
     animations[PlayerState::IDLE] = new Animation(sprite, 16);
     animations[PlayerState::WALKING] = new Animation(sprite, 16);
     animations[PlayerState::JUMPING] = new Animation(sprite, 16);
@@ -36,12 +37,14 @@ Player::Player() : SpriteEntity(PLAYER_SPRITE) {
 void Player::update(float delta) {
     velocity.x *= 1 / (1 + (delta * 15.f));
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        velocity.x = 150;
-    }
+    if (renderManager->getWindow()->hasFocus()) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            velocity.x = 300;
+        }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        velocity.x = -150;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            velocity.x = -300;
+        }
     }
 
     if (jumpProgress) {
@@ -60,6 +63,7 @@ void Player::update(float delta) {
     if (sprite.getPosition().x < 0) sprite.move(480, 0);
     else if (sprite.getPosition().x > 480) sprite.move(-480, 0);
 
+    // Set velocity to 0 if the speed is being slowed down
     if (abs(velocity.x) < 0.2) velocity.x = 0;
 
     if (!jumpProgress) {
@@ -92,12 +96,20 @@ void Player::update(float delta) {
 
 void Player::applyGravity(float delta) {
     bool collision = false;
-    for (Entity *entity : entityManager->getEntities()) {
-        if (typeid(*entity) == typeid(Player)) continue;
-        if (sprite.getGlobalBounds().intersects(entity->getGlobalBounds())) collision = true;
+    for (Entity *entity : getCollisions()) {
+        // Check if the player is standing with at least half the body above the platform
+        if (entity->getGlobalBounds().getPosition().y <= sprite.getGlobalBounds().getPosition().y + sprite.getGlobalBounds().getSize().y && sprite.getGlobalBounds().getPosition().y + (sprite.getGlobalBounds().getSize().y/4)*3 < entity->getGlobalBounds().getPosition().y) {
+            collision = true;
+
+            // Move player to top of platform
+            if (entity->getGlobalBounds().getPosition().y <= sprite.getGlobalBounds().getPosition().y + sprite.getGlobalBounds().getSize().y -1) sprite.setPosition(sprite.getPosition().x, entity->getGlobalBounds().getPosition().y - sprite.getGlobalBounds().getSize().y/2);
+            break;
+        }
     }
-    if (getCollisions().empty()) sprite.move(0, GRAVITY * delta);
-    else jumpProgress = 0.0f;
+
+    // Apply gravity only when there is no collision
+    if (!collision) sprite.move(0, GRAVITY * delta);
+    else jumpProgress = 0.0f; // There can't be a jump currently if we are colliding
 }
 
 
